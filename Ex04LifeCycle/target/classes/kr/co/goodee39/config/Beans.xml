@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd"				
+		default-init-method="defaultInit" default-destroy-method="defaultDestory">
+		<!-- init-method와 destory-method가 설정되어 있지 않다면, default-init-method, default-destory-method를
+			 beans에서 설정하여 호출할 수 있다. -->				
+						
+						
+		
+		<bean id="t1" class="kr.co.goodee39.beans.TestBean1" lazy-init="true" init-method="bean1Init" destroy-method="bean1Destroy"/>
+		
+		<bean id="t2" class="kr.co.goodee39.beans.TestBean2" lazy-init="true"/>
+</beans>						

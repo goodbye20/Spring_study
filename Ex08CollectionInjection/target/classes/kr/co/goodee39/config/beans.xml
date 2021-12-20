@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+			<!-- 제네딕이 String인 List에 데이터 삽입 -->
+			<bean id="t1" class="kr.co.goodee39.beans.TestBean">
+				<property name="List1">
+					<list>
+						<value>문자열1</value>
+						<value>문자열2</value>
+						<value>문자열3</value>
+					</list>
+				</property>			
+			
+			<!-- 제네딕이 int인 List에 데이터 삽입 -->
+				<property name="List2">
+					<list>
+						<value>100</value>
+						<value>200</value>
+						<value>300</value>
+					</list>
+				</property>	
+			
+			<!-- 제네딕에 DataBean인 List에 데이터 삽입 -->
+			<!-- 방법 1 안에 직접 class로 선언 -->
+			<!-- 방법 2 밖의 baen을 선언하고 ref로 bean의 id를 불러옴 -->
+			<property name="List3">
+				<list>
+					<bean class="kr.co.goodee39.beans.DataBean"/>	
+					<bean class="kr.co.goodee39.beans.DataBean"/>	
+					<ref bean="data_bean"/>
+					<ref bean="data_bean"/>
+				</list>
+			</property>	
+					
+			<!-- 제네딕에 String인 set에 데이터 삽입 -->		
+					<property name="set1">
+					<set>
+						<value>문자열1</value>
+						<value>문자열2</value>
+						<value>문자열3</value>
+					</set>
+					</property>	
+					
+			
+			<!-- 제네딕에 interger인 set에 데이터 삽입 -->		
+					<property name="set2">
+					<set>
+						<value>200</value>
+						<value>300</value>
+						<value>400</value>
+					</set>
+					</property>	
+			<!-- 제네딕에 DataBean인 set에 데이터 삽입 -->	
+					<property name="set3">
+						<set>
+							<bean class="kr.co.goodee39.beans.DataBean"/>	
+							<bean class="kr.co.goodee39.beans.DataBean"/>	
+							<ref bean="data_bean"/>
+							<ref bean="data_bean"/>
+						</set>
+					</property>	
+					
+			<!-- map setting -->
+					<property name="map1">
+						<map>
+							<entry key="a1" value="문자열1"/>
+							<entry key="a2" value="100" value-type="int"/>
+							<entry key="a3">
+								<bean class="kr.co.goodee39.beans.DataBean"/>								
+							</entry>
+							<entry key="a4" value-ref="data_bean"/>
+							<entry key="a5">
+								<list>
+									<value>문자열1</value>
+									<value>문자열2</value>
+									<value>문자열3</value>
+								</list>
+							</entry>
+							
+						</map>
+					</property>	
+			</bean>
+			
+				
+		<bean id="data_bean" class="kr.co.goodee39.beans.DataBean" scope="prototype"/>	
+</beans>
