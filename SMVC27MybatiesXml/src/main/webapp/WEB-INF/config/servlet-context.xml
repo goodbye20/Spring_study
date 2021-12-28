@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans 
+   xmlns="http://www.springframework.org/schema/mvc"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:beans="http://www.springframework.org/schema/beans"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xmlns:p="http://www.springframework.org/schema/p"
+   xmlns:tx="http://www.springframework.org/schema/tx"
+   xmlns:aop="http://www.springframework.org/schema/aop"
+   xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                  http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                  http://www.springframework.org/schema/beans
+                  http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.springframework.org/schema/context
+                  http://www.springframework.org/schema/context/spring-context.xsd
+                  http://www.springframework.org/schema/tx
+                  http://www.springframework.org/schema/tx/spring-tx.xsd
+                  http://www.springframework.org/schema/aop
+                  http://www.springframework.org/schema/aop/spring-aop.xsd">
+                  
+   <!-- 스캔한 패키지 내부의 클래스 중 Controller 어노테이션을 가지고 있는 클래스들을 Controller로 로딩하도록 한다.-->
+   <annotation-driven/>
+   
+   <!-- 스캔할 bean 들이 모여있는 패키지를 지정한다. -->
+   <context:component-scan base-package="kr.co.goodee39.controller"/>
+   <context:component-scan base-package="kr.co.goodee39.service"/>
+   
+   <!-- Controller의 메서드에서 반환하는 문자열 앞 뒤에 붙일 경로 정보를 세팅 -->
+   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <beans:property name="prefix" value="/WEB-INF/views/"/>
+      <beans:property name="suffix" value=".jsp"/>
+   </beans:bean>
+   
+   <!-- 정적 파일 경로 세팅 -->
+   <resources mapping="/**" location="/resources/"/>
+   
+     
+   <!-- ************ XML에서만 되는 최종 방식 ************ -->
+   <!-- root-context.xml에 설정하면 순서상 오류로 안됨 -->
+   <!-- AOP로 트랜잭션 주는방식 -->
+   <!-- 아래와 같이 tx:advice를 해주기 위해서는 transactionManager가 이미 설정되있어야함-->
+   <!-- <tx:advice id="txAdvice" transaction-manager="transactionManager">
+   		<tx:attributes>
+   			<tx:method name="txData" propagation="REQUIRED"/>
+   		</tx:attributes>
+   </tx:advice>
+   
+   <aop:config>
+   		<aop:pointcut expression="execution( * kr.co..*.*(..))" id="firstTransactionMethod"/>
+   		<aop:advisor advice-ref="txAdvice" pointcut-ref="firstTransactionMethod"/>
+   </aop:config> -->
+   
+   
+   
+   <!-- tx:annotation-driven -->
+   <!-- 아래와 같이 설정해두고서 -->
+   <!-- 트랜젝션을 걸어주고 싶은 메서드에 가서 @Transtional만 붙여주면 끝 -->
+   <!-- 주의점 -->
+   <!-- 1. @Transtional은 public 메소드에서만 정상 작동한다.  -->
+   <!-- 2. @Transtional을 걸어놓은 메서드가 동일한 클래스 내에 다른 메소드에 의해
+   			호출당하면 트랜잭션은 정상 작동하지 않게 된다.  -->
+   <tx:annotation-driven/>
+   
+</beans:beans>
