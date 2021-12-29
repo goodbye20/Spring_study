@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="bbs">
+	<select id="selectBBSList" resultType="vo.bbsVO" >
+		select id, title, owner,
+		createdate, content from bbs 
+	</select>
+	
+	<insert id="insertBBSList" parameterType="vo.bbsVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="id">
+		select MAX(ID)+1 from bbs </selectKey>
+		insert into
+		bbs(id,title,owner,createdate,content)
+		values(#{id},#{title},#{owner},#{createdate},#{content})
+	</insert>
+
+</mapper>
