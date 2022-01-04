@@ -4,13 +4,11 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="bbs">
-	<select id="selectBBS"  parameterType="bbsVO" resultType="bbsVO" >
-		select num, title, content, owner, createdate, isdelete
+	<!-- content가 양이많으면 렉이걸릴수 있기때문에 select문을 나눔 -->
+	<select id="selectBBSList" parameterType="bbsVO" resultType="bbsVO" >
+		select num, title, ownerid, ownername, createdate, isdelete
 		from bbs
 		where isdelete = 'N'
-			<if test="num!=null">
-				and num=#{num}
-			</if>
 			<if test="title!=null">
 				and title like #{title}
 			</if>
@@ -20,16 +18,24 @@
 			limit #{start}, #{count}
 	</select>
 	
+	<!-- content를 포함한 select문(상세보기) -->
+	<select id="selectBBS" parameterType="bbsVO" resultType="bbsVO">
+		select num, title, content, ownerid, ownername, createdate, isdelete
+		from bbs
+		where isdelete = 'N'
+		and num=#{num}
+	</select>
+	
 	<insert id="insertBBS" parameterType="bbsVO" >
-		insert into bbs(title, content, owner, createdate)
-		value(#{title},#{content},#{owner},#{createdate})
+		insert into bbs(title, content, ownerid, ownername, createdate)
+		value(#{title},#{content},#{ownerid}, #{ownername}, #{createdate})
 	</insert>
 	
 	<update id="updateBBS" parameterType="bbsVO" >
 		update bbs
 		<set>
-			<if test="title!=null">title =#{title}</if>
-			<if test="content!=null">content =#{content}</if>
+			<if test="title!=null">, title = #{title}</if>
+			<if test="content!=null">, content = #{content}</if>
 		</set>
 		where num=#{num}
 	</update>

@@ -32,7 +32,7 @@
    </beans:bean>
    
    <!-- 정적 파일 경로 세팅 -->
-   <resources mapping="/**" location="/resources/"/>
+   <resources mapping="/resources/**" location="/resources/"/>
    
    
    <!-- aop로 트랜잭션 주는 방식 -->

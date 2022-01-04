@@ -4,9 +4,18 @@ public class BBSVO {
 	private int num;
 	private String title;
 	private String content;
-	private String owner;
-	private String craetedate;
+	private String ownerid;
+	private String ownername;	
+	private String createdate;
 	private String isdelete;
+	private int start;
+	private int count;
+	
+	public BBSVO() {
+		// 페이징 처리를 위한 초기값 설정
+		this.start = 0;
+		this.count = 10;
+	}
 	public int getNum() {
 		return num;
 	}
@@ -25,23 +34,43 @@ public class BBSVO {
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public String getOwner() {
-		return owner;
+	
+	public String getOwnerid() {
+		return ownerid;
 	}
-	public void setOwner(String owner) {
-		this.owner = owner;
+	public void setOwnerid(String ownerid) {
+		this.ownerid = ownerid;
 	}
-	public String getCraetedate() {
-		return craetedate;
+	public String getOwnername() {
+		return ownername;
 	}
-	public void setCraetedate(String craetedate) {
-		this.craetedate = craetedate;
+	public void setOwnername(String ownername) {
+		this.ownername = ownername;
+	}
+	
+	public String getCreatedate() {
+		return createdate;
+	}
+	public void setCreatedate(String createdate) {
+		this.createdate = createdate;
 	}
 	public String getIsdelete() {
 		return isdelete;
 	}
 	public void setIsdelete(String isdelete) {
 		this.isdelete = isdelete;
+	}
+	public int getStart() {
+		return start;
+	}
+	public void setStart(int start) {
+		this.start = start;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
 	}
 	
 }
