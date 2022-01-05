@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h1>글 수정</h1>
-	<form:form modelAttribute="bbsVO" action="${pageContext.request.contextPath}/bbs/modify_result">
+	<form:form modelAttribute="BBSVO" action="${pageContext.request.contextPath}/bbs/modify_result">
 		<ul>
 			<li><label for="title">제목 : </label><form:input path="title"/></li>
 			<li><form:textarea path="content" cols="50" rows="10"/></li>

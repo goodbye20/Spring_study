@@ -2,22 +2,48 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+
 <mapper namespace="bbs">
+	<select id="selectBBSCount" parameterType="bbsVO"
+		resultType="int">
+		select count(*)
+		from bbs
+		where isdelete = 'N'
+		<choose>
+			<when test="title != null and content != null">
+				and (title like #{title} or content like #{content})
+			</when>
+			<when test="title == null and content != null">
+				and content like #{content}			
+			</when>
+			<when test="title != null and content == null">
+				and title like #{title}
+			</when>
+		</choose>
+	</select>
+
 	<!-- content가 양이많으면 렉이걸릴수 있기때문에 select문을 나눔 -->
-	<select id="selectBBSList" parameterType="bbsVO" resultType="bbsVO" >
+	<!-- 나중에 카테고리의 조건을 물고 색인을 할시 and를 하게되면 교집합이 되기때문에 -->
+	<!-- or로 해주어야함 -->
+	<select id="selectBBSList" parameterType="bbsVO"
+		resultType="bbsVO">
 		select num, title, ownerid, ownername, createdate, isdelete
 		from bbs
 		where isdelete = 'N'
-			<if test="title!=null">
+		<choose>
+			<when test="title != null and content != null">
+				and (title like #{title} or content like #{content})
+			</when>
+			<when test="title == null and content != null">
+				and content like #{content}			
+			</when>
+			<when test="title != null and content == null">
 				and title like #{title}
-			</if>
-			<if test="content!=null">
-				and content like #{content}
-			</if>
-			limit #{start}, #{count}
+			</when>
+		</choose>
+		limit #{start}, #{count}
 	</select>
-	
+
 	<!-- content를 포함한 select문(상세보기) -->
 	<select id="selectBBS" parameterType="bbsVO" resultType="bbsVO">
 		select num, title, content, ownerid, ownername, createdate, isdelete
@@ -25,13 +51,13 @@
 		where isdelete = 'N'
 		and num=#{num}
 	</select>
-	
-	<insert id="insertBBS" parameterType="bbsVO" >
+
+	<insert id="insertBBS" parameterType="bbsVO">
 		insert into bbs(title, content, ownerid, ownername, createdate)
 		value(#{title},#{content},#{ownerid}, #{ownername}, #{createdate})
 	</insert>
-	
-	<update id="updateBBS" parameterType="bbsVO" >
+
+	<update id="updateBBS" parameterType="bbsVO">
 		update bbs
 		<set>
 			<if test="title!=null">, title = #{title}</if>
@@ -39,8 +65,9 @@
 		</set>
 		where num=#{num}
 	</update>
-	
-	<delete id="deleteBBS" parameterType="bbsVO" >
-		update bbs set isdelete='Y' where num=#{num}
+
+	<delete id="deleteBBS" parameterType="bbsVO">
+		update bbs set
+		isdelete='Y' where num=#{num}
 	</delete>
 </mapper>

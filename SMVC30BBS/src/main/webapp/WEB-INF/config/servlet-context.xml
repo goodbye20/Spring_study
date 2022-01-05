@@ -49,6 +49,7 @@
    
    <interceptors>
    		<interceptor>
+   		<!-- /bbs/ 경로를 타는 어떤 루트던 인터셉터를 거쳐야만함 -->
    			<mapping path="/bbs/**"/>
    			<beans:bean class="kr.co.goodee39.interceptor.LoginInterceptor"></beans:bean>
    		</interceptor>

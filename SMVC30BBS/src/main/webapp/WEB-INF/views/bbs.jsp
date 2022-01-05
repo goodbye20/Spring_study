@@ -41,7 +41,119 @@
 		</tbody>
 	</table>
 	<hr>
-	
+	<%-- <a href="${pageContext.request.contextPath}/bbs/main?num=${i}">${i}</a> --%>	
+	<!-- 현재 페이지라면 num == i라면 링크가 안타지도록하며 -->
+	<!-- 대용량 페이징처리하기 -->
+	<%
+		// num -> 1~10 11~20 21~30 ====> ((num-1)/10)+1
+		// num = 현재 페이지
+		int num = (Integer)request.getAttribute("num");
+		// count = 전체 데이터 개수
+		int count = (Integer)request.getAttribute("count");
+		// total = 전체 페이지 개수
+		int total = count/10+((count%10==0)?0:1);
+		// minBlock = 한 블럭에서 가장 작은 번호를 가지는 페이지 번호
+		int minBlock = (((num-1)/10)*10)+1;
+		// maxBlock = 한 블럭에서 가장 큰 번호를 가지는 페이지 번호
+		int maxBlock = (((num-1)/10)+1)*10;
+		
+		pageContext.setAttribute("total", total);
+		pageContext.setAttribute("minBlock", minBlock);
+		pageContext.setAttribute("maxBlock", maxBlock);
+		
+		// 검색 데이터 연동(검색결과 또한 페이징을 적용시키기 위해)
+		String query = "";
+		
+		String title = (String)request.getAttribute("title");
+		String content = (String)request.getAttribute("content");
+		
+		if(title != null){
+			query += "&title="+title;
+		}
+		
+		if(content != null){
+			query += "&content="+content;
+		}
+		
+		pageContext.setAttribute("query", query);
+		// ${query}를 이제 링크뒤에 삽입해줌으로써 만약 if로 넘길값이 없다면
+		// 그냥"" 변화없지만 값이 있다면 위처럼 쿼리가 추가되어 넘어감
+	%>
+	<c:choose>
+		<c:when test="${(minBlock-1) < 1}">
+		   <span>◀◀</span>
+		</c:when>
+		<c:otherwise>		
+			<a href="${pageContext.request.contextPath}/bbs/main?num=${minBlock-1}${query}">◀◀</a>
+		</c:otherwise>
+	</c:choose>
+   &nbsp;&nbsp;
+	<c:choose>
+		<c:when test="${num == 1}">
+			<span>◀</span>
+		</c:when>
+		<c:otherwise>		
+			<a href="${pageContext.request.contextPath}/bbs/main?num=${num-1}${query}">◀</a>
+		</c:otherwise>
+	</c:choose>
+	<c:forEach begin="${minBlock}" end="${(total<maxBlock)?total:maxBlock}" step="1" var="i">
+	<c:choose>
+		<c:when test="${num == i}">
+			<span>${i}</span>
+		</c:when>
+		<c:otherwise>
+		<a href="${pageContext.request.contextPath}/bbs/main?num=${i}${query}">${i}</a>		
+		</c:otherwise>
+	</c:choose>
+	</c:forEach>
+	<c:choose>
+		<c:when test="${num == total}">
+			<span>▶</span>
+		</c:when>
+		<c:otherwise>		
+			<a href="${pageContext.request.contextPath}/bbs/main?num=${num+1}${query}">▶</a>
+		</c:otherwise>
+	</c:choose>
+	  &nbsp;&nbsp;
+	  <c:choose>
+		<c:when test="${maxBlock > total}">
+			 <span>▶▶</span>
+		</c:when>
+		<c:otherwise>		
+			<a href="${pageContext.request.contextPath}/bbs/main?num=${maxBlock+1}${query}">▶▶</a>
+		</c:otherwise>
+	</c:choose>
+	<hr>
+	<% if((title!=null)&&(content!=null)) { %>
+		<select id="category" name="category">
+			<option value="title">제목</option>
+			<option value="content">내용</option>
+			<option value="both">제목+내용</option>
+		</select>
+		<input type="text" id="text" name="text" value="${title}" />
+	<% } else if(title!=null) { %>
+		<select id="category" name="category">
+			<option value="title">제목</option>
+			<option value="content">내용</option>
+			<option value="both">제목+내용</option>
+		</select>
+		<input type="text" id="text" name="text" value="${title}" />
+	<% } else if(content!=null) { %>
+		<select id="category" name="category">
+			<option value="title">제목</option>
+			<option value="content">내용</option>
+			<option value="both">제목+내용</option>
+		</select>
+		<input type="text" id="text" name="text" value="${content}" />
+	<%} else { %>
+		<select id="category" name="category">
+			<option value="title">제목</option>
+			<option value="content">내용</option>
+			<option value="both">제목+내용</option>
+		</select>
+		<input type="text" id="text" name="text"/>
+	<% } %>
+	<button id="search">검색</button>
 	<hr>
 	<button id="create-btn">추가</button>
 	<script type="text/javascript">
@@ -49,6 +161,21 @@
 			$("#create-btn").click(function(){
 				location.href = "${pageContext.request.contextPath}/bbs/create";
 			});	
+			
+			$("#search").click(function(){
+				let category = $("#category").val();
+				let text = $("#text").val();
+				
+				//	location.href = "${pageContext.request.contextPath}/bbs/main?"+category+"="+text;
+				if(category == "title"){
+					location.href = "${pageContext.request.contextPath}/bbs/main?title="+text;					
+				} else if(category == "content"){
+					location.href = "${pageContext.request.contextPath}/bbs/main?content="+text;
+				} else if(category == "both"){
+					location.href = "${pageContext.request.contextPath}/bbs/main?title="+text+"&content="+text;
+				}
+				
+			});
 		});
 	</script>
 </body>

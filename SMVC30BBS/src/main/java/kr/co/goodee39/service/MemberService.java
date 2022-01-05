@@ -30,8 +30,7 @@ public class MemberService {
 		return path;
 	}
 	
-	public String setMember(MemberVO vo) {
+	public void setMember(MemberVO vo) {
 		sqlSessionTemplate.insert("member.insertMember", vo);
-		return "";
 	}
 }
